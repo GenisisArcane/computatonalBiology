@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microscope Specimen Calculator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Microscope Specimen Calculator</h1>
+        
+        <div class="calculator">
+            <form method="POST">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="microscope_size">Specimen Size (mm):</label>
+                    <input type="number" step="any" id="specimen_size" name="specimen_size" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="magnification">Magnification:</label>
+                    <input type="number" id="magnification" name="magnification" required>
+                </div>
+                
+                <button type="submit">Calculate</button>
+            </form>
+            
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+            
+            {% if actual_size %}
+                <div class="result">
+                    <h3>Result</h3>
+                    <p>Actual size: <strong>{{ "%.4f"|format(actual_size) }} µm</strong></p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <h2>Calculation History</h2>
+        {% if specimens %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Specimen Size (µm)</th>
+                        <th>Magnification</th>
+                        <th>Actual Size (µm)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for specimen in specimens %}
+                    <tr>
+                        <td>{{ specimen['username'] }}</td>
+                        <td>{{ "%.2f"|format(specimen['specimen_size']) }}</td>
+                        <td>{{ specimen['magnification'] }}</td>
+                        <td>{{ "%.4f"|format(specimen['actual_size']) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No calculations yet.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
